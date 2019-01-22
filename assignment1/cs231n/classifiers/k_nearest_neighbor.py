@@ -157,7 +157,6 @@ class KNearestNeighbor(object):
             # Hint: Look up the function numpy.argsort.                             #
             #########################################################################
             a = np.argsort(dists[i], axis=0)[:k]
-            print(a.shape)
             closest_y = self.y_train[a]
             #########################################################################
             # TODO:                                                                 #
