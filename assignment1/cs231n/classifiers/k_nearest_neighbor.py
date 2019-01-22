@@ -122,12 +122,9 @@ class KNearestNeighbor(object):
         # HINT: Try to formulate the l2 distance using matrix multiplication    #
         #       and two broadcast sums.                                         #
         #########################################################################
-        print(np.multiply(self.X_train * X).shape)
-        return
-        # dists_tmp = np.square(self.X_train) -
-        dists = np.sqrt(np.sum(dists_tmp, axis=1))
-        print((self.X_train - X).shape)
-        return
+        dists = np.sqrt((X ** 2).sum(axis=1)[:, np.newaxis] +
+                        (self.X_train ** 2).sum(axis=1) - 2 *
+                        X.dot(self.X_train.T))
         #########################################################################
         #                         END OF YOUR CODE                              #
         #########################################################################
@@ -160,7 +157,6 @@ class KNearestNeighbor(object):
             # Hint: Look up the function numpy.argsort.                             #
             #########################################################################
             a = np.argsort(dists[i], axis=0)[:k]
-            print(a.shape)
             closest_y = self.y_train[a]
             #########################################################################
             # TODO:                                                                 #
