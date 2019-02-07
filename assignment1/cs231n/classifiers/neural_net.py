@@ -75,7 +75,10 @@ class TwoLayerNet(object):
     # Store the result in the scores variable, which should be an array of      #
     # shape (N, C).                                                             #
     #############################################################################
-    pass
+
+    h = np.maximum(0, X.dot(W1) + b1)
+    scores = h.dot(W2) + b2
+
     #############################################################################
     #                              END OF YOUR CODE                             #
     #############################################################################
@@ -92,7 +95,19 @@ class TwoLayerNet(object):
     # in the variable loss, which should be a scalar. Use the Softmax           #
     # classifier loss.                                                          #
     #############################################################################
-    pass
+
+    num_train = X.shape[0]
+    max_scores = scores.max(axis=1, keepdims=True)
+    scores -= max_scores
+
+    exp_score = np.exp(scores)
+    sum_exp_score = np.sum(exp_score, axis=1)
+    loss = np.sum(-np.log(exp_score[range(num_train), y] / sum_exp_score))
+
+    loss /= num_train
+    loss += reg * np.sum(W1 * W1)
+    loss += reg * np.sum(W2 * W2)
+
     #############################################################################
     #                              END OF YOUR CODE                             #
     #############################################################################
@@ -104,7 +119,16 @@ class TwoLayerNet(object):
     # and biases. Store the results in the grads dictionary. For example,       #
     # grads['W1'] should store the gradient on W1, and be a matrix of same size #
     #############################################################################
-    pass
+
+    softmax_deriv = (np.exp(scores) / np.exp(scores).sum(axis=1).reshape(-1, 1))
+    softmax_deriv[range(num_train), y] -= 1
+    dW2 = h.T.dot(softmax_deriv)
+
+    dW2 /= num_train
+    dW2 += 2 * reg * W2
+
+    grads['W2'] = dW2
+
     #############################################################################
     #                              END OF YOUR CODE                             #
     #############################################################################
