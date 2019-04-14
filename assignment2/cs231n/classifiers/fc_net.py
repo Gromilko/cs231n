@@ -210,9 +210,9 @@ class FullyConnectedNet(object):
         # of the first batch normalization layer, self.bn_params[1] to the forward
         # pass of the second batch normalization layer, etc.
         self.bn_params = []
-        if self.normalization=='batchnorm':
+        if self.normalization == 'batchnorm':
             self.bn_params = [{'mode': 'train'} for i in range(self.num_layers - 1)]
-        if self.normalization=='layernorm':
+        if self.normalization == 'layernorm':
             self.bn_params = [{} for i in range(self.num_layers - 1)]
 
         # Cast all parameters to the correct datatype
@@ -255,10 +255,10 @@ class FullyConnectedNet(object):
         current_input = X
         cache = {}
         for i in range(1, num_layers):
-            out_af_rel, cache_af_rel = affine_relu_forward(current_input, self.params[f'W{i}'], self.params[f'b{i}'])
+            current_input, cache_af_rel = affine_relu_forward(current_input, self.params[f'W{i}'], self.params[f'b{i}'])
             cache[f'W{i}'] = cache_af_rel
-            current_input = out_af_rel
-        scores, cache_af = affine_forward(out_af_rel, self.params[f'W{num_layers}'], self.params[f'b{num_layers}'])
+
+        scores, cache_af = affine_forward(current_input, self.params[f'W{num_layers}'], self.params[f'b{num_layers}'])
         cache[f'W{num_layers}'] = cache_af
 
         ############################################################################
